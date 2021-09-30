@@ -1,0 +1,62 @@
+<%-- any content can be specified here e.g.: --%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="newpackage.Megasena"%>
+<%@ page pageEncoding="UTF-8" %>
+
+<head>
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+<%
+    ArrayList<Integer> numeros = Megasena.geraNumero();
+    
+    if(request.getParameter("login") != null) {
+        String usuario = request.getParameter("usuario");
+        
+        session.setAttribute("session.megasena", numeros);
+        session.setAttribute("session.usuario", usuario);
+    }
+    
+    if(request.getParameter("logout") != null) {
+        session.removeAttribute("session.usuario");
+        response.sendRedirect(request.getContextPath());
+    }
+%>
+
+<%
+    if(session.getAttribute("session.usuario") == null) {%>
+    <header class="p-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <a href="index.jsp" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                    <h3>André Jean</h3>
+                </a>
+                
+                 <form method="post" class="d-flex gap-3">
+                     <input type="text" name="usuario" required  class="form-control" placeholder="Usuario"/>
+                     <button type="submit" name="login" class="btn btn-primary">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </header>
+    
+    <%} else {%>
+    <header class="p-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <a href="index.jsp" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                    <h3><%= session.getAttribute("session.usuario")%></h3>
+                </a>
+                
+                 <form method="post" class="d-flex gap-3">
+                     <button type="submit" name="logout" class="btn btn-danger">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>    
+    <%}%>
+
